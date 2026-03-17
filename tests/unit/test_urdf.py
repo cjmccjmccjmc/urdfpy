@@ -14,8 +14,8 @@ def test_urdfpy(tmpdir):
     assert isinstance(u, URDF)
     for j in u.joints:
         assert isinstance(j, Joint)
-    for l in u.links:
-        assert isinstance(l, Link)
+    for limb in u.links:
+        assert isinstance(limb, Link)
     for t in u.transmissions:
         assert isinstance(t, Transmission)
     for m in u.materials:
@@ -24,24 +24,24 @@ def test_urdfpy(tmpdir):
     # Test fk
     fk = u.link_fk()
     assert isinstance(fk, dict)
-    for l in fk:
-        assert isinstance(l, Link)
-        assert isinstance(fk[l], np.ndarray)
-        assert fk[l].shape == (4,4)
+    for limb in fk:
+        assert isinstance(limb, Link)
+        assert isinstance(fk[limb], np.ndarray)
+        assert fk[limb].shape == (4,4)
 
     fk = u.link_fk({'shoulder_pan_joint': 2.0})
     assert isinstance(fk, dict)
-    for l in fk:
-        assert isinstance(l, Link)
-        assert isinstance(fk[l], np.ndarray)
-        assert fk[l].shape == (4,4)
+    for limb in fk:
+        assert isinstance(limb, Link)
+        assert isinstance(fk[limb], np.ndarray)
+        assert fk[limb].shape == (4,4)
 
     fk = u.link_fk(np.zeros(6))
     assert isinstance(fk, dict)
-    for l in fk:
-        assert isinstance(l, Link)
-        assert isinstance(fk[l], np.ndarray)
-        assert fk[l].shape == (4,4)
+    for limb in fk:
+        assert isinstance(limb, Link)
+        assert isinstance(fk[limb], np.ndarray)
+        assert fk[limb].shape == (4,4)
 
     fk = u.link_fk(np.zeros(6), link='upper_arm_link')
     assert isinstance(fk, np.ndarray)
@@ -50,20 +50,20 @@ def test_urdfpy(tmpdir):
     fk = u.link_fk(links=['shoulder_link', 'upper_arm_link'])
     assert isinstance(fk, dict)
     assert len(fk) == 2
-    for l in fk:
-        assert isinstance(l, Link)
-        assert isinstance(fk[l], np.ndarray)
-        assert fk[l].shape == (4,4)
+    for limb in fk:
+        assert isinstance(limb, Link)
+        assert isinstance(fk[limb], np.ndarray)
+        assert fk[limb].shape == (4,4)
 
     fk = u.link_fk(links=list(u.links)[:2])
     assert isinstance(fk, dict)
     assert len(fk) == 2
-    for l in fk:
-        assert isinstance(l, Link)
-        assert isinstance(fk[l], np.ndarray)
-        assert fk[l].shape == (4,4)
+    for limb in fk:
+        assert isinstance(limb, Link)
+        assert isinstance(fk[limb], np.ndarray)
+        assert fk[limb].shape == (4,4)
 
-    cfg={j.name: 0.5 for j in u.actuated_joints}
+    cfg = {j.name: 0.5 for j in u.actuated_joints}
     for _ in range(1000):
         fk = u.collision_trimesh_fk(cfg=cfg)
         for key in fk:
@@ -76,7 +76,7 @@ def test_urdfpy(tmpdir):
         assert isinstance(fk[key], np.ndarray)
         assert fk[key].shape == (1000,4,4)
 
-    cfg={j.name: 0.5 for j in u.actuated_joints}
+    cfg = {j.name: 0.5 for j in u.actuated_joints}
     for _ in range(1000):
         fk = u.collision_trimesh_fk(cfg=cfg)
         for key in fk:

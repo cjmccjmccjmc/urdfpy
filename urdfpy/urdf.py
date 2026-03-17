@@ -1052,7 +1052,7 @@ class Collision(URDFType):
         :class:`.Visual`
             A deep copy of the visual.
         """
-        origin=self.origin.copy()
+        origin = self.origin.copy()
         if scale is not None:
             if not isinstance(scale, (list, np.ndarray)):
                 scale = np.repeat(scale, 3)
@@ -1165,7 +1165,7 @@ class Visual(URDFType):
         :class:`.Visual`
             A deep copy of the visual.
         """
-        origin=self.origin.copy()
+        origin = self.origin.copy()
         if scale is not None:
             if not isinstance(scale, (list, np.ndarray)):
                 scale = np.repeat(scale, 3)
@@ -2344,7 +2344,7 @@ class Joint(URDFType):
             raise ValueError('Invalid configuration')
 
     def get_child_poses(self, cfg, n_cfgs):
-        """Computes the child pose relative to a parent pose for a given set of 
+        """Computes the child pose relative to a parent pose for a given set of
         configuration values.
 
         Parameters
@@ -2633,7 +2633,7 @@ class Link(URDFType):
 
         visuals = None
         if not collision_only:
-            visuals=[v.copy(prefix=prefix, scale=scale) for v in self.visuals]
+            visuals = [v.copy(prefix=prefix, scale=scale) for v in self.visuals]
 
         cpy = Link(
             name='{}{}'.format(prefix, self.name),
@@ -3593,7 +3593,7 @@ class URDF(URDFType):
             The copied URDF.
         """
         return URDF(
-            name = (name if name else self.name),
+            name=(name if name else self.name),
             links=[v.copy(prefix, scale, collision_only) for v in self.links],
             joints=[v.copy(prefix, scale) for v in self.joints],
             transmissions=[v.copy(prefix, scale) for v in self.transmissions],
@@ -3886,7 +3886,7 @@ class URDF(URDFType):
         This should result in a dict mapping each joint to a list of cfg values, one
         per joint.
         """
-        joint_cfg = {j : [] for j in self.actuated_joints}
+        joint_cfg = {j: [] for j in self.actuated_joints}
         n_cfgs = None
         if isinstance(cfgs, dict):
             for joint in cfgs:

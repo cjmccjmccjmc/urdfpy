@@ -25,7 +25,7 @@ def rpy_to_matrix(coords):
 
     Returns
     -------
-    R : (3,3) float
+    R : (3, 3) float
         The corresponding homogenous 3x3 rotation matrix.
     """
     coords = np.asanyarray(coords, dtype=np.float64)
@@ -56,7 +56,7 @@ def matrix_to_rpy(R, solution=1):
 
     Parameters
     ----------
-    R : (3,3) float
+    R : (3, 3) float
         A 3x3 homogenous rotation matrix.
     solution : int
         Either 1 or 2, indicating which solution to return.
@@ -71,21 +71,21 @@ def matrix_to_rpy(R, solution=1):
     p = 0.0
     y = 0.0
 
-    if np.abs(R[2,0]) >= 1.0 - 1e-12:
+    if np.abs(R[2, 0]) >= 1.0 - 1e-12:
         y = 0.0
-        if R[2,0] < 0:
+        if R[2, 0] < 0:
             p = np.pi / 2
-            r = np.arctan2(R[0,1], R[0,2])
+            r = np.arctan2(R[0, 1], R[0, 2])
         else:
             p = -np.pi / 2
-            r = np.arctan2(-R[0,1], -R[0,2])
+            r = np.arctan2(-R[0, 1], -R[0, 2])
     else:
         if solution == 1:
-            p = -np.arcsin(R[2,0])
+            p = -np.arcsin(R[2, 0])
         else:
-            p = np.pi + np.arcsin(R[2,0])
-        r = np.arctan2(R[2,1] / np.cos(p), R[2,2] / np.cos(p))
-        y = np.arctan2(R[1,0] / np.cos(p), R[0,0] / np.cos(p))
+            p = np.pi + np.arcsin(R[2, 0])
+        r = np.arctan2(R[2, 1] / np.cos(p), R[2, 2] / np.cos(p))
+        y = np.arctan2(R[1, 0] / np.cos(p), R[0, 0] / np.cos(p))
 
     return np.array([r, p, y], dtype=np.float64)
 
@@ -95,7 +95,7 @@ def matrix_to_xyz_rpy(matrix):
 
     Parameters
     ----------
-    matrix : (4,4) float
+    matrix : (4, 4) float
         The homogenous transform matrix.
 
     Returns
@@ -103,8 +103,8 @@ def matrix_to_xyz_rpy(matrix):
     xyz_rpy : (6,) float
         The xyz_rpy vector.
     """
-    xyz = matrix[:3,3]
-    rpy = matrix_to_rpy(matrix[:3,:3])
+    xyz = matrix[:3, 3]
+    rpy = matrix_to_rpy(matrix[:3, :3])
     return np.hstack((xyz, rpy))
 
 
@@ -118,12 +118,12 @@ def xyz_rpy_to_matrix(xyz_rpy):
 
     Returns
     -------
-    matrix : (4,4) float
+    matrix : (4, 4) float
         The homogenous transform matrix.
     """
     matrix = np.eye(4, dtype=np.float64)
-    matrix[:3,3] = xyz_rpy[:3]
-    matrix[:3,:3] = rpy_to_matrix(xyz_rpy[3:])
+    matrix[:3, 3] = xyz_rpy[:3]
+    matrix[:3, :3] = rpy_to_matrix(xyz_rpy[3:])
     return matrix
 
 
@@ -139,7 +139,7 @@ def parse_origin(node):
 
     Returns
     -------
-    matrix : (4,4) float
+    matrix : (4, 4) float
         The 4x4 homogneous transform matrix that corresponds to this node's
         ``origin`` child. Defaults to the identity matrix if no ``origin``
         child was found.
@@ -148,10 +148,10 @@ def parse_origin(node):
     origin_node = node.find('origin')
     if origin_node is not None:
         if 'xyz' in origin_node.attrib:
-            matrix[:3,3] = np.fromstring(origin_node.attrib['xyz'], sep=' ')
+            matrix[:3, 3] = np.fromstring(origin_node.attrib['xyz'], sep=' ')
         if 'rpy' in origin_node.attrib:
             rpy = np.fromstring(origin_node.attrib['rpy'], sep=' ')
-            matrix[:3,:3] = rpy_to_matrix(rpy)
+            matrix[:3, :3] = rpy_to_matrix(rpy)
     return matrix
 
 
@@ -160,7 +160,7 @@ def unparse_origin(matrix):
 
     Parameters
     ----------
-    matrix : (4,4) float
+    matrix : (4, 4) float
         The 4x4 homogneous transform matrix to convert into an ``origin``
         XML node.
 
@@ -175,8 +175,8 @@ def unparse_origin(matrix):
           the rotation of the origin.
     """
     node = ET.Element('origin')
-    node.attrib['xyz'] = '{} {} {}'.format(*matrix[:3,3])
-    node.attrib['rpy'] = '{} {} {}'.format(*matrix_to_rpy(matrix[:3,:3]))
+    node.attrib['xyz'] = '{} {} {}'.format(*matrix[:3, 3])
+    node.attrib['rpy'] = '{} {} {}'.format(*matrix_to_rpy(matrix[:3, :3]))
     return node
 
 
@@ -249,13 +249,13 @@ def configure_origin(value):
 
     Parameters
     ----------
-    value : None, (6,) float, or (4,4) float
+    value : None, (6,) float, or (4, 4) float
         The value to turn into the matrix.
         If (6,), interpreted as xyzrpy coordinates.
 
     Returns
     -------
-    matrix : (4,4) float or None
+    matrix : (4, 4) float or None
         The created matrix.
     """
     if value is None:
@@ -264,7 +264,7 @@ def configure_origin(value):
         value = np.asanyarray(value, dtype=np.float64)
         if value.shape == (6,):
             value = xyz_rpy_to_matrix(value)
-        elif value.shape != (4,4):
+        elif value.shape != (4, 4):
             raise ValueError('Origin must be specified as a 4x4 '
                              'homogenous transformation matrix')
     else:

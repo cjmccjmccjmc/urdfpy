@@ -203,8 +203,8 @@ class URDFType(object):
         return val
 
     def _unparse_simple_attribs(self, node):
-        """Convert all Python types from the _ATTRIBS array back into attributes
-        for an XML node.
+        """Convert all Python types from the _ATTRIBS array back into
+        attributes for an XML node.
 
         Parameters
         ----------
@@ -621,9 +621,9 @@ class Mesh(URDFType):
         if scale is not None:
             sm = np.eye(4)
             if isinstance(scale, (list, np.ndarray)):
-                sm[:3,:3] = np.diag(scale)
+                sm[:3, :3] = np.diag(scale)
             else:
-                sm[:3,:3] = np.diag(np.repeat(scale, 3))
+                sm[:3, :3] = np.diag(np.repeat(scale, 3))
             for i, m in enumerate(meshes):
                 meshes[i] = m.apply_transform(sm)
         base, fn = os.path.split(self.filename)
@@ -663,8 +663,7 @@ class Geometry(URDFType):
     _TAG = 'geometry'
 
     def __init__(self, box=None, cylinder=None, sphere=None, mesh=None):
-        if (box is None and cylinder is None and
-                sphere is None and mesh is None):
+        if (box is None and cylinder is None and sphere is None and mesh is None):
             raise ValueError('At least one geometry element must be set')
         self.box = box
         self.cylinder = cylinder
@@ -859,7 +858,7 @@ class Material(URDFType):
     name : str
         The name of the material.
     color : (4,) float, optional
-        The RGBA color of the material in the range [0,1].
+        The RGBA color of the material in the range [0, 1].
     texture : :class:`.Texture`, optional
         A texture for the material.
     """
@@ -888,7 +887,7 @@ class Material(URDFType):
 
     @property
     def color(self):
-        """(4,) float : The RGBA color of the material, in the range [0,1].
+        """(4,) float : The RGBA color of the material, in the range [0, 1].
         """
         return self._color
 
@@ -976,7 +975,7 @@ class Collision(URDFType):
         The geometry of the element
     name : str, optional
         The name of the collision geometry.
-    origin : (4,4) float, optional
+    origin : (4, 4) float, optional
         The pose of the collision element relative to the link frame.
         Defaults to identity.
     """
@@ -1020,7 +1019,7 @@ class Collision(URDFType):
 
     @property
     def origin(self):
-        """(4,4) float : The pose of this element relative to the link frame.
+        """(4, 4) float : The pose of this element relative to the link frame.
         """
         return self._origin
 
@@ -1056,7 +1055,7 @@ class Collision(URDFType):
         if scale is not None:
             if not isinstance(scale, (list, np.ndarray)):
                 scale = np.repeat(scale, 3)
-            origin[:3,3] *= scale
+            origin[:3, 3] *= scale
         return Collision(
             name='{}{}'.format(prefix, self.name),
             origin=origin,
@@ -1073,7 +1072,7 @@ class Visual(URDFType):
         The geometry of the element
     name : str, optional
         The name of the visual geometry.
-    origin : (4,4) float, optional
+    origin : (4, 4) float, optional
         The pose of the visual element relative to the link frame.
         Defaults to identity.
     material : :class:`.Material`, optional
@@ -1120,7 +1119,7 @@ class Visual(URDFType):
 
     @property
     def origin(self):
-        """(4,4) float : The pose of this element relative to the link frame.
+        """(4, 4) float : The pose of this element relative to the link frame.
         """
         return self._origin
 
@@ -1169,7 +1168,7 @@ class Visual(URDFType):
         if scale is not None:
             if not isinstance(scale, (list, np.ndarray)):
                 scale = np.repeat(scale, 3)
-            origin[:3,3] *= scale
+            origin[:3, 3] *= scale
         return Visual(
             geometry=self.geometry.copy(prefix=prefix, scale=scale),
             name='{}{}'.format(prefix, self.name),
@@ -1185,9 +1184,9 @@ class Inertial(URDFType):
     ----------
     mass : float
         The mass of the link in kilograms.
-    inertia : (3,3) float
+    inertia : (3, 3) float
         The 3x3 symmetric rotational inertia matrix.
-    origin : (4,4) float, optional
+    origin : (4, 4) float, optional
         The pose of the inertials relative to the link frame.
         Defaults to identity if not specified.
     """
@@ -1210,7 +1209,7 @@ class Inertial(URDFType):
 
     @property
     def inertia(self):
-        """(3,3) float : The 3x3 symmetric rotational inertia matrix.
+        """(3, 3) float : The 3x3 symmetric rotational inertia matrix.
         """
         return self._inertia
 
@@ -1223,7 +1222,7 @@ class Inertial(URDFType):
 
     @property
     def origin(self):
-        """(4,4) float : The pose of the inertials relative to the link frame.
+        """(4, 4) float : The pose of the inertials relative to the link frame.
         """
         return self._origin
 
@@ -1256,12 +1255,12 @@ class Inertial(URDFType):
         mass.attrib['value'] = str(self.mass)
         node.append(mass)
         inertia = ET.Element('inertia')
-        inertia.attrib['ixx'] = str(self.inertia[0,0])
-        inertia.attrib['ixy'] = str(self.inertia[0,1])
-        inertia.attrib['ixz'] = str(self.inertia[0,2])
-        inertia.attrib['iyy'] = str(self.inertia[1,1])
-        inertia.attrib['iyz'] = str(self.inertia[1,2])
-        inertia.attrib['izz'] = str(self.inertia[2,2])
+        inertia.attrib['ixx'] = str(self.inertia[0, 0])
+        inertia.attrib['ixy'] = str(self.inertia[0, 1])
+        inertia.attrib['ixz'] = str(self.inertia[0, 2])
+        inertia.attrib['iyy'] = str(self.inertia[1, 1])
+        inertia.attrib['iyz'] = str(self.inertia[1, 2])
+        inertia.attrib['izz'] = str(self.inertia[2, 2])
         node.append(inertia)
         return node
 
@@ -2062,8 +2061,8 @@ class Joint(URDFType):
         The type of the joint. Must be one of :obj:`.Joint.TYPES`.
     axis : (3,) float, optional
         The axis of the joint specified in joint frame. Defaults to
-        ``[1,0,0]``.
-    origin : (4,4) float, optional
+        ``[1, 0, 0]``.
+    origin : (4, 4) float, optional
         The pose of the child link with respect to the parent link's frame.
         The joint frame is defined to be coincident with the child link's
         frame, so this is also the pose of the joint frame with respect to
@@ -2173,7 +2172,7 @@ class Joint(URDFType):
 
     @property
     def origin(self):
-        """(4,4) float : The pose of child and joint frames relative to the
+        """(4, 4) float : The pose of child and joint frames relative to the
         parent link's frame.
         """
         return self._origin
@@ -2255,7 +2254,7 @@ class Joint(URDFType):
 
         Parameters
         ----------
-        cfg : float, (2,) float, (6,) float, or (4,4) float
+        cfg : float, (2,) float, (6,) float, or (4, 4) float
             The configuration of the joint.
 
         Returns
@@ -2282,7 +2281,7 @@ class Joint(URDFType):
 
         Parameters
         ----------
-        cfg : float, (2,) float, (6,) float, or (4,4) float
+        cfg : float, (2,) float, (6,) float, or (4, 4) float
             The configuration values for this joint. They are interpreted
             based on the joint type as follows:
 
@@ -2292,13 +2291,13 @@ class Joint(URDFType):
             - ``continuous`` - a rotation about the axis in radians.
             - ``planar`` - the x and y translation values in the plane.
             - ``floating`` - the xyz values followed by the rpy values,
-              or a (4,4) matrix.
+              or a (4, 4) matrix.
 
             If ``cfg`` is ``None``, then this just returns the joint pose.
 
         Returns
         -------
-        pose : (4,4) float
+        pose : (4, 4) float
             The pose of the child relative to the parent.
         """
         if cfg is None:
@@ -2318,7 +2317,7 @@ class Joint(URDFType):
             else:
                 cfg = float(cfg)
             translation = np.eye(4, dtype=np.float64)
-            translation[:3,3] = self.axis * cfg
+            translation[:3, 3] = self.axis * cfg
             return self.origin.dot(translation)
         elif self.joint_type == 'planar':
             if cfg is None:
@@ -2330,7 +2329,7 @@ class Joint(URDFType):
                     '(2,) float configuration required for planar joints'
                 )
             translation = np.eye(4, dtype=np.float64)
-            translation[:3,3] = self.origin[:3,:2].dot(cfg)
+            translation[:3, 3] = self.origin[:3, :2].dot(cfg)
             return self.origin.dot(translation)
         elif self.joint_type == 'floating':
             if cfg is None:
@@ -2364,7 +2363,7 @@ class Joint(URDFType):
 
         Returns
         -------
-        poses : (n,4,4) float
+        poses : (n,4, 4) float
             The poses of the child relative to the parent.
         """
         if cfg is None:
@@ -2379,7 +2378,7 @@ class Joint(URDFType):
             if cfg is None:
                 cfg = np.zeros(n_cfgs)
             translation = np.tile(np.eye(4), (n_cfgs, 1, 1))
-            translation[:,:3,3] = self.axis * cfg[:,np.newaxis]
+            translation[:, :3, 3] = self.axis * cfg[:, np.newaxis]
             return np.matmul(self.origin, translation)
         elif self.joint_type == 'planar':
             raise NotImplementedError()
@@ -2429,21 +2428,20 @@ class Joint(URDFType):
 
         Returns
         -------
-        rots : (n,4,4)
+        rots : (n,4, 4)
             The rotation matrices
         """
         axis = axis / np.linalg.norm(axis)
         sina = np.sin(angles)
         cosa = np.cos(angles)
         M = np.tile(np.eye(4), (len(angles), 1, 1))
-        M[:,0,0] = cosa
-        M[:,1,1] = cosa
-        M[:,2,2] = cosa
-        M[:,:3,:3] += (
-            np.tile(np.outer(axis, axis), (len(angles), 1, 1)) *
-            (1.0 - cosa)[:, np.newaxis, np.newaxis]
+        M[:, 0, 0] = cosa
+        M[:, 1, 1] = cosa
+        M[:, 2, 2] = cosa
+        M[:, :3, :3] += (
+            np.tile(np.outer(axis, axis), (len(angles), 1, 1)) * (1.0 - cosa)[:, np.newaxis, np.newaxis]
         )
-        M[:,:3,:3] += np.tile(np.array([
+        M[:, :3, :3] += np.tile(np.array([
             [0.0, -axis[2], axis[1]],
             [axis[2], 0.0, -axis[0]],
             [-axis[1], axis[0], 0.0]]
@@ -2467,7 +2465,7 @@ class Joint(URDFType):
         if scale is not None:
             if not isinstance(scale, (list, np.ndarray)):
                 scale = np.repeat(scale, 3)
-            origin[:3,3] *= scale
+            origin[:3, 3] *= scale
         cpy = Joint(
             name='{}{}'.format(prefix, self.name),
             joint_type=self.joint_type,
@@ -2476,7 +2474,7 @@ class Joint(URDFType):
             axis=self.axis.copy(),
             origin=origin,
             limit=(self.limit.copy(prefix, scale) if self.limit else None),
-            dynamics=(self.dynamics.copy(prefix,scale) if self.dynamics else None),
+            dynamics=(self.dynamics.copy(prefix, scale) if self.dynamics else None),
             safety_controller=(self.safety_controller.copy(prefix, scale) if
                                self.safety_controller else None),
             calibration=(self.calibration.copy(prefix, scale) if self.calibration else None),
@@ -2593,7 +2591,7 @@ class Link(URDFType):
                     if c.geometry.mesh is not None:
                         if c.geometry.mesh.scale is not None:
                             S = np.eye(4)
-                            S[:3,:3] = np.diag(c.geometry.mesh.scale)
+                            S[:3, :3] = np.diag(c.geometry.mesh.scale)
                             pose = pose.dot(S)
                     m.apply_transform(pose)
                     meshes.append(m)
@@ -2622,12 +2620,12 @@ class Link(URDFType):
                 sm = np.eye(4)
                 if not isinstance(scale, (list, np.ndarray)):
                     scale = np.repeat(scale, 3)
-                sm[:3,:3] = np.diag(scale)
+                sm[:3, :3] = np.diag(scale)
                 cm = self.collision_mesh.copy()
                 cm.density = self.inertial.mass / cm.volume
                 cm.apply_transform(sm)
                 cmm = np.eye(4)
-                cmm[:3,3] = cm.center_mass
+                cmm[:3, 3] = cm.center_mass
                 inertial = Inertial(mass=cm.mass, inertia=cm.moment_inertia,
                                     origin=cmm)
 
@@ -2983,7 +2981,7 @@ class URDF(URDFType):
 
         Returns
         -------
-        fk : dict or (4,4) float
+        fk : dict or (4, 4) float
             A map from links to 4x4 homogenous transform matrices that
             position them relative to the base link's frame, or a single
             4x4 matrix if ``link`` is specified.
@@ -3069,8 +3067,8 @@ class URDF(URDFType):
 
         Returns
         -------
-        fk : dict or (n,4,4) float
-            A map from links to a (n,4,4) vector of homogenous transform matrices that
+        fk : dict or (n,4, 4) float
+            A map from links to a (n,4, 4) vector of homogenous transform matrices that
             position the links relative to the base link's frame, or a single
             nx4x4 matrix if ``link`` is specified.
         """
@@ -3226,7 +3224,7 @@ class URDF(URDFType):
                     if visual.geometry.mesh is not None:
                         if visual.geometry.mesh.scale is not None:
                             S = np.eye(4, dtype=np.float64)
-                            S[:3,:3] = np.diag(visual.geometry.mesh.scale)
+                            S[:3, :3] = np.diag(visual.geometry.mesh.scale)
                             pose = pose.dot(S)
                     fk[mesh] = pose
         return fk
@@ -3264,7 +3262,7 @@ class URDF(URDFType):
                     if visual.geometry.mesh is not None:
                         if visual.geometry.mesh.scale is not None:
                             S = np.eye(4, dtype=np.float64)
-                            S[:3,:3] = np.diag(visual.geometry.mesh.scale)
+                            S[:3, :3] = np.diag(visual.geometry.mesh.scale)
                             poses = np.matmul(poses, S)
                     fk[mesh] = poses
         return fk
@@ -3472,7 +3470,7 @@ class URDF(URDFType):
                 ct = ct.reshape(-1, 1)
             if ct.ndim != 2 or ct.shape[1] != len(self.actuated_joints):
                 raise ValueError('Cfg trajectory must have entry for each joint')
-            ct_np = {j: ct[:,i] for i, j in enumerate(self.actuated_joints)}
+            ct_np = {j: ct[:, i] for i, j in enumerate(self.actuated_joints)}
         else:
             raise TypeError('Invalid type for cfg_trajectory: {}'
                             .format(type(cfg_trajectory)))
@@ -3494,14 +3492,12 @@ class URDF(URDFType):
         # Compute alphas for each time
         right_inds = np.digitize(times, bins, right=True)
         right_inds[right_inds == 0] = 1
-        alphas = ((bins[right_inds] - times) /
-                  (bins[right_inds] - bins[right_inds - 1]))
+        alphas = ((bins[right_inds] - times) / (bins[right_inds] - bins[right_inds - 1]))
 
         # Create the new interpolated trajectory
         new_ct = {}
         for k in ct_np:
-            new_ct[k] = (alphas * ct_np[k][right_inds - 1] +
-                         (1.0 - alphas) * ct_np[k][right_inds])
+            new_ct[k] = (alphas * ct_np[k][right_inds - 1] + (1.0 - alphas) * ct_np[k][right_inds])
 
         # Create the scene
         if use_collision:
@@ -3523,7 +3519,7 @@ class URDF(URDFType):
         # Pop the visualizer asynchronously
         v = pyrender.Viewer(scene, run_in_thread=True,
                             use_raymond_lighting=True,
-                            view_center=blp[:3,3])
+                            view_center=blp[:3, 3])
 
         # Now, run our loop
         i = 0
@@ -3636,7 +3632,7 @@ class URDF(URDFType):
             Another URDF to fuze to this one.
         link : :class:`.Link` or str
             The link of this URDF to attach the other URDF to.
-        origin : (4,4) float, optional
+        origin : (4, 4) float, optional
             The location in this URDF's link frame to attach the base link of the other
             URDF at.
         name : str, optional
@@ -3910,7 +3906,7 @@ class URDF(URDFType):
             else:
                 cfgs = np.asanyarray(cfgs, dtype=np.float64)
                 for i, j in enumerate(self.actuated_joints):
-                    joint_cfg[j] = cfgs[:,i]
+                    joint_cfg[j] = cfgs[:, i]
         else:
             raise ValueError('Incorrectly formatted config array')
 

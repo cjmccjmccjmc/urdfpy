@@ -3,7 +3,7 @@ networkx==3.6.1
 numpy==2.4.3
 pillow==12.1.1
 pycollada==0.6
-pyrender==0.1.45
+pyrender @ git+https://github.com/jasper-tms/pyrender.git@master
 six==1.17.0
 trimesh==4.11.3
 Sphinx==9.1.0
